@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
 
     return FutureBuilder(
       future: menuProvider.cargarData(),
-      //opcional
+      //opcional, pero con eso ya no se enviara null al metodo _listaItems
       initialData: [],
       builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
         print(snapshot.data);
@@ -49,6 +49,11 @@ class HomePage extends StatelessWidget {
 
   _listaItems(List<dynamic> data, BuildContext context) {
     final List<Widget> opciones = [];
+
+    // se puede obviar fijando que la initialData sea [] en el metodo superior
+    // if ( data == null) {
+    //   return [];
+    // }
 
     data.forEach((opt) {
       final widgetTemp = ListTile(
