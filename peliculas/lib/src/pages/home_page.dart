@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:peliculas/src/providers/peliculas_providers.dart';
+import 'package:peliculas/src/widgets/card_swiper_widget.dart';
 
 
 class HomePage extends StatelessWidget {
@@ -31,23 +32,11 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _swipeTarjetas() {
-    return Container(
-      padding: EdgeInsets.only(top: 10),
-      width: double.infinity,
-      height: 300,
-      child: new Swiper(
-        itemWidth: 200,
-        itemBuilder: (BuildContext context, int index) {
-          return new Image.network(
-            "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Pac-Man_Cutscene.svg/283px-Pac-Man_Cutscene.svg.png",
-            fit: BoxFit.fill,
-          );
-        },
-        itemCount: 3,
-        pagination: SwiperPagination(),
-        control: SwiperControl(),
-        layout: SwiperLayout.STACK,
-      )
+    final peliculasProvider = PeliculasProvider();
+    peliculasProvider.getEnCines();
+
+    return CardSwiper(
+      peliculas: [1,2,3,4,5],
     );
   }
 
