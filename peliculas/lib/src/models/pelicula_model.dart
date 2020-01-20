@@ -74,6 +74,14 @@ class Pelicula {
 
   }
 
+  getPosterImg() {
+    if (posterPath == null) {
+      return 'https://securet9.classistatic.com/assets/images/en_ZA/no-image-dc0d8afd5a.svg';
+    } else {
+      return 'https://image.tmdb.org/t/p/w500/$posterPath';
+    }
+  }
+
 }
 
 class BelongsToCollection {
