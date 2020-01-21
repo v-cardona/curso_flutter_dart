@@ -82,6 +82,14 @@ class Pelicula {
     }
   }
 
+  getBackgroundImg() {
+    if (backdropPath == null) {
+      return 'https://securet9.classistatic.com/assets/images/en_ZA/no-image-dc0d8afd5a.svg';
+    } else {
+      return 'https://image.tmdb.org/t/p/w500/$backdropPath';
+    }
+  }
+
 }
 
 class BelongsToCollection {
