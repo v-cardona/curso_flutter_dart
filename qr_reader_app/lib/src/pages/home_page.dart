@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:qr_reader_app/src/bloc/scans_bloc.dart';
+import 'package:qr_reader_app/src/models/scan_model.dart';
 import 'package:qr_reader_app/src/pages/direcciones_page.dart';
 import 'package:qr_reader_app/src/pages/mapas_page.dart';
 
@@ -14,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   int currentIndex = 0;
+  final scansBloc = new ScansBloc();
 
 
   @override
@@ -24,7 +27,7 @@ class _HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.delete_forever),
-            onPressed: () {},
+            onPressed: scansBloc.borrarScansTodos
           )
         ],
       ),
@@ -77,16 +80,17 @@ class _HomePageState extends State<HomePage> {
     // https://fernando-herrera.com
     // geo:40.724233047051705,-74.00731459101564
 
-    String futureString = ''; 
+    String futureString = 'https://fernando-herrera.com'; 
+
     // try {
     // futureString = await new QRCodeReader().scan();
     // } catch (e) {
     //   futureString = e.toString();
     // }
-    // print(futureString);
 
-    // if (futureString != null) {
-    //   print('Hay info');
-    // }
+    if (futureString != null) {
+      final scan = ScanModel(valor: futureString);
+      scansBloc.agregarScan(scan);
+    }
   }
 }
