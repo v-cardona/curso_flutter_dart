@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:qr_reader_app/src/bloc/scans_bloc.dart';
 import 'package:qr_reader_app/src/models/scan_model.dart';
 import 'package:qr_reader_app/src/pages/direcciones_page.dart';
 import 'package:qr_reader_app/src/pages/mapas_page.dart';
+import 'package:qr_reader_app/src/utils/utils.dart' as utils;
 
 import 'package:qrcode_reader/qrcode_reader.dart';
 
@@ -35,7 +38,9 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.filter_center_focus),
-        onPressed: _scanQR,
+        onPressed: () {
+          _scanQR(context);
+        },  
         backgroundColor: Theme.of(context).primaryColor,
       ),
       bottomNavigationBar: _crearBottomNavigationBar(),
@@ -75,7 +80,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _scanQR () async {
+  void _scanQR (BuildContext context) async {
 
     // https://fernando-herrera.com
     // geo:40.724233047051705,-74.00731459101564
@@ -91,6 +96,18 @@ class _HomePageState extends State<HomePage> {
     if (futureString != null) {
       final scan = ScanModel(valor: futureString);
       scansBloc.agregarScan(scan);
+
+      
+      final scan2 = ScanModel(valor: 'geo:40.724233047051705,-74.00731459101564');
+      scansBloc.agregarScan(scan2);
+
+      // es ios da un problema de que llega antes la solucion que el intetno de abrir
+      if (Platform.isIOS) {
+        Future.delayed(Duration(milliseconds: 750), utils.abrirScan(context, scan));
+      } else {
+        utils.abrirScan(context, scan);
+      }
+
     }
   }
 }
