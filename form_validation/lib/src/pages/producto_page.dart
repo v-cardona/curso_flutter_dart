@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:form_validation/src/models/producto_model.dart';
 import 'package:form_validation/src/providers/productos_providers.dart';
 import 'package:form_validation/src/utils/utils.dart' as utils;
+import 'package:image_picker/image_picker.dart';
 
 class ProductoPage extends StatefulWidget {
   // para controlar el formulario y poder validarlo
@@ -14,6 +17,7 @@ class _ProductoPageState extends State<ProductoPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   ProductoModel producto = new ProductoModel();
   final productoProvider = new ProductosProvider();
+  File foto;
 
   //para no pulsar el boton varias veces mientras aun esta guardando
   bool _guardando = false;
@@ -34,11 +38,11 @@ class _ProductoPageState extends State<ProductoPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.photo_size_select_actual),
-            onPressed: () {},
+            onPressed: _seleccionarFoto,
           ),
           IconButton(
             icon: Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: _tomarFoto,
           ),
         ],
       ),
@@ -49,6 +53,7 @@ class _ProductoPageState extends State<ProductoPage> {
             key: formKey,
             child: Column(
               children: <Widget>[
+                _mostrarFoto(),
                 _crearNombre(),
                 _crearPrecio(),
                 _crearDisponible(),
@@ -164,5 +169,41 @@ class _ProductoPageState extends State<ProductoPage> {
 
     // el scafol es quien puede emitir el snackbar, por eso hay que llamarlo
     scaffoldKey.currentState.showSnackBar(snackBar);
+  }
+
+
+
+  Widget _mostrarFoto() {
+    if (producto.fotoUrl != null) {
+      return Container();
+    } else {
+      return Image(
+        // si la foto tiene valor, con el ?, y toma el path, si es nulo entonces coge el assets
+        image: AssetImage( foto?.path ?? 'assets/no-image.png'),
+        height: 300,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  void _seleccionarFoto() async{
+    _procesarImagen(ImageSource.gallery);
+  }
+
+  void _tomarFoto() async{
+    _procesarImagen(ImageSource.camera);
+  }
+
+
+  _procesarImagen(ImageSource origen) async{
+    foto = await ImagePicker.pickImage(
+      source: origen,
+    );
+
+    if (foto != null) {
+      //limpiar
+    }
+    setState(() {});
+
   }
 }
