@@ -121,7 +121,7 @@ class _ProductoPageState extends State<ProductoPage> {
     );
   }
 
-  void _submit() {
+  void _submit() async {
     if (!formKey.currentState.validate()) {
       return;
     }
@@ -131,6 +131,10 @@ class _ProductoPageState extends State<ProductoPage> {
     //para no pulsar el boton varias veces mientras aun esta guardando
     _guardando = true;
     setState(() {});
+
+    if (foto != null) {
+      producto.fotoUrl = await productoProvider.subirImagen(foto);
+    }
 
     if (producto.id == null) {
       productoProvider.crearProducto(producto);
@@ -175,7 +179,12 @@ class _ProductoPageState extends State<ProductoPage> {
 
   Widget _mostrarFoto() {
     if (producto.fotoUrl != null) {
-      return Container();
+      return FadeInImage(
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        image: NetworkImage(producto.fotoUrl),
+        height: 300,
+        fit: BoxFit.contain,
+      );
     } else {
       return Image(
         // si la foto tiene valor, con el ?, y toma el path, si es nulo entonces coge el assets
@@ -201,7 +210,7 @@ class _ProductoPageState extends State<ProductoPage> {
     );
 
     if (foto != null) {
-      //limpiar
+      producto.fotoUrl = null;
     }
     setState(() {});
 
