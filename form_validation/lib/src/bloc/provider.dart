@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:form_validation/src/bloc/login_bloc.dart';
+import 'package:form_validation/src/bloc/productos_bloc.dart';
+export 'package:form_validation/src/bloc/productos_bloc.dart';
 export 'package:form_validation/src/bloc/login_bloc.dart';
 
 class Provider extends InheritedWidget{
@@ -17,7 +19,9 @@ class Provider extends InheritedWidget{
   Provider._internal({Key key, Widget child})
     : super(key: key, child: child);
 
-  final login = LoginBloc();
+// el login deberia ser provida tambien
+  final login = new LoginBloc();
+  final _productosBloc = new ProductosBloc();
 
 
   @override
@@ -31,5 +35,10 @@ class Provider extends InheritedWidget{
     return (context.inheritFromWidgetOfExactType(Provider) as Provider).login;
   } 
 
+  //crear una propuedad nueva, no es igual a la privada de arriba
+  static ProductosBloc productosBloc(BuildContext context) {
+    // esta solucion esta deprecated
+    return (context.inheritFromWidgetOfExactType(Provider) as Provider)._productosBloc;
+  } 
 
 }

@@ -34,6 +34,11 @@ class ProductosProvider {
       return [];
     }
 
+    // esto por si expira el tokenid, muestra nada, pero aqui seria donde se manda o hace lo que quiera
+    if (decodedData['error'] != null) {
+      return [];
+    }
+
     decodedData.forEach((id, producto) {
       final productoTemp = ProductoModel.fromJson(producto);
       productoTemp.id = id;
@@ -84,7 +89,6 @@ class ProductosProvider {
     final resp = await http.Response.fromStream(streamResponse);
 
     if (resp.statusCode != 200 && resp.statusCode != 201) {
-      print(resp.body);
       return null;
     }
 
