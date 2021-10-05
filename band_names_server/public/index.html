@@ -21,11 +21,16 @@
         //emitir event
         // nombre del evento
         // objeto a enviar, normalmente json {nombre: 'Fernando'}
-        socket.emit('mensaje', {nombre: 'Fernando'});
+        //socket.emit('mensaje', {nombre: 'Fernando'});
 
-        // escuchar evento
-        socket.on('mensaje', function(payload) {
+        // escuchar emitir-mensaje
+        socket.on('nuevo-mensaje', function(payload) {
             console.log('escuchando:', payload);
+        });
+        
+        socket.on('active-bands', function(bands) {
+            console.clear();
+            console.table(bands);
         });
     </script>
 </body>
