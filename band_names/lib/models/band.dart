@@ -1,3 +1,5 @@
+import 'package:band_names/services/socket_service.dart';
+
 class Band {
   String id;
   String name;
@@ -11,9 +13,9 @@ class Band {
 
   factory Band.fromMap(Map<String, dynamic> obj) {
     return Band(
-      id: obj['id'] ?? '',
-      name: obj['name'] ?? '',
-      votes: obj['votes'] ?? 0,
+      id: obj.containsKey('id') ? obj['id'] : 'no-id',
+      name: obj.containsKey('name') ? obj['name'] : 'no-name',
+      votes: obj.containsKey('votes') ? obj['votes'] : 0,
     );
   }
 }
