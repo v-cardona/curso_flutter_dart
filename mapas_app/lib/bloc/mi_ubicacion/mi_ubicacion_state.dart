@@ -4,12 +4,12 @@ part of 'mi_ubicacion_bloc.dart';
 class MiUbicacionState {
   final bool siguiendo;
   final bool existeUbicacion;
-  final LatLng? ubicacion;
+  final LatLng ubicacion;
 
   const MiUbicacionState({
     this.siguiendo = true,
     this.existeUbicacion = false,
-    this.ubicacion,
+    required this.ubicacion,
   });
 
   MiUbicacionState copyWith({

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapas_app/bloc/mapa/mapa_bloc.dart';
 import 'package:mapas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
 
 class MapaPage extends StatefulWidget {
@@ -27,13 +29,30 @@ class _MapaPageState extends State<MapaPage> {
     return Scaffold(
       body: BlocBuilder<MiUbicacionBloc, MiUbicacionState>(
         builder: (context, state) {
-          if (!state.existeUbicacion) {
-            return const Center(child: Text('Ubicando...'));
-          } else {
-            return Center(child: Text(state.ubicacion?.toString() ?? ''));
-          }
+          return crearMapa(state);
         },
       ),
+    );
+  }
+
+  Widget crearMapa(MiUbicacionState state) {
+    if (!state.existeUbicacion) {
+      return const Center(child: Text('Ubicando...'));
+    }
+
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
+
+    final cameraPosition = CameraPosition(
+      target: state.ubicacion,
+      zoom: 15,
+    );
+    return GoogleMap(
+      initialCameraPosition: cameraPosition,
+      myLocationEnabled: true,
+      zoomControlsEnabled: false,
+      onMapCreated: (mapController) {
+        mapaBloc.initMapa(mapController);
+      },
     );
   }
 }

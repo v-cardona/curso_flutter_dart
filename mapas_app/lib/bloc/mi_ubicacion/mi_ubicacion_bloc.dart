@@ -11,7 +11,10 @@ part 'mi_ubicacion_state.dart';
 class MiUbicacionBloc extends Bloc<MiUbicacionEvent, MiUbicacionState> {
   late StreamSubscription<Position> _positionSubscription;
 
-  MiUbicacionBloc() : super(MiUbicacionState()) {
+  MiUbicacionBloc()
+      : super(const MiUbicacionState(
+          ubicacion: LatLng(0, 0),
+        )) {
     on<OnUbicacionCambio>((event, emit) {
       emit(state.copyWith(ubicacion: event.ubicacion, existeUbicacion: true));
     });
@@ -24,7 +27,6 @@ class MiUbicacionBloc extends Bloc<MiUbicacionEvent, MiUbicacionState> {
       desiredAccuracy: LocationAccuracy.high,
       distanceFilter: 10,
     ).listen((position) {
-      print(position);
       add(OnUbicacionCambio(LatLng(position.latitude, position.longitude)));
     });
   }
