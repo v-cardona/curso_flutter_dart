@@ -17,7 +17,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   Polyline _miRuta = const Polyline(
     polylineId: PolylineId('mi_ruta'),
     width: 4,
-    color: Colors.black87,
+    color: Colors.transparent,
   );
 
   MapaBloc() : super(MapaState()) {
@@ -25,6 +25,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     on<OnNuevaUbicacion>(_onNuevaUbicacion);
     on<OnMarcarRecorrido>(_onMarcarRecorrido);
     on<OnSeguirUbicacion>(_onSeguirUbicacion);
+    on<OnMovioMapa>(_onMovioMapa);
   }
 
   void initMapa(GoogleMapController controller) {
@@ -94,6 +95,12 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
 
     emit(state.copyWith(
       seguirUbicacion: !state.seguirUbicacion,
+    ));
+  }
+
+  void _onMovioMapa(OnMovioMapa event, Emitter<MapaState> emit) {
+    emit(state.copyWith(
+      ubicacionCentral: event.centroMapa,
     ));
   }
 }

@@ -18,3 +18,9 @@ class OnMarcarRecorrido extends MapaEvent {}
 
 // hacer un toogle de si se sigue la ubiacion de recorrido con la camara centrada
 class OnSeguirUbicacion extends MapaEvent {}
+
+class OnMovioMapa extends MapaEvent {
+  final LatLng centroMapa;
+
+  OnMovioMapa(this.centroMapa);
+}
