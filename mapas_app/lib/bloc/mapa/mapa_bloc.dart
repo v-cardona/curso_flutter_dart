@@ -24,6 +24,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     on<OnMapaListo>(_onMapaListo);
     on<OnNuevaUbicacion>(_onNuevaUbicacion);
     on<OnMarcarRecorrido>(_onMarcarRecorrido);
+    on<OnSeguirUbicacion>(_onSeguirUbicacion);
   }
 
   void initMapa(GoogleMapController controller) {
@@ -49,6 +50,11 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   }
 
   void _onNuevaUbicacion(OnNuevaUbicacion event, Emitter<MapaState> emit) {
+    // si al recibir ubicacion esta activo el seguir al usuario, mover la camara
+    if (state.seguirUbicacion) {
+      moverCamara(event.ubicacion);
+    }
+
     // una copia nueva
     List<LatLng> points = [..._miRuta.points, event.ubicacion];
     // asignarla a la polyline
@@ -75,6 +81,19 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     emit(state.copyWith(
       polylines: currentPolylines,
       dibujarRecorrido: !state.dibujarRecorrido,
+    ));
+  }
+
+  void _onSeguirUbicacion(OnSeguirUbicacion event, Emitter<MapaState> emit) {
+    // si esta en false, significa que quiere seguirla ahora
+    if (!state.seguirUbicacion) {
+      // forzar el mover camara para no esperar a la siguiente ubicacion
+      // que ya se tiene en la ruta
+      moverCamara(_miRuta.points[_miRuta.points.length - 1]);
+    }
+
+    emit(state.copyWith(
+      seguirUbicacion: !state.seguirUbicacion,
     ));
   }
 }

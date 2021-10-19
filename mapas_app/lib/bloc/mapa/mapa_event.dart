@@ -15,3 +15,6 @@ class OnNuevaUbicacion extends MapaEvent {
 
 // hacer un toogle de si se dibuja el recorrido que esta realizando el usuario
 class OnMarcarRecorrido extends MapaEvent {}
+
+// hacer un toogle de si se sigue la ubiacion de recorrido con la camara centrada
+class OnSeguirUbicacion extends MapaEvent {}
