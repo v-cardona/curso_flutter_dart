@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mapas_app/bloc/mapa/mapa_bloc.dart';
 import 'package:mapas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
+import 'package:mapas_app/widgets/widgets.dart';
 
 class MapaPage extends StatefulWidget {
   const MapaPage({Key? key}) : super(key: key);
@@ -32,6 +33,12 @@ class _MapaPageState extends State<MapaPage> {
           return crearMapa(state);
         },
       ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          BtnUbicacion(),
+        ],
+      ),
     );
   }
 
@@ -49,6 +56,7 @@ class _MapaPageState extends State<MapaPage> {
     return GoogleMap(
       initialCameraPosition: cameraPosition,
       myLocationEnabled: true,
+      myLocationButtonEnabled: false,
       zoomControlsEnabled: false,
       onMapCreated: (mapController) {
         mapaBloc.initMapa(mapController);
