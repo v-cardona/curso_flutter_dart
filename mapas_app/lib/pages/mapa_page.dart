@@ -37,6 +37,7 @@ class _MapaPageState extends State<MapaPage> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           BtnUbicacion(),
+          BtnMiRuta(),
         ],
       ),
     );
@@ -48,6 +49,8 @@ class _MapaPageState extends State<MapaPage> {
     }
 
     final mapaBloc = BlocProvider.of<MapaBloc>(context);
+    // cada vez que se recibe una nueva ubicacion se envia el evento
+    mapaBloc.add(OnNuevaUbicacion(state.ubicacion));
 
     final cameraPosition = CameraPosition(
       target: state.ubicacion,
@@ -61,6 +64,7 @@ class _MapaPageState extends State<MapaPage> {
       onMapCreated: (mapController) {
         mapaBloc.initMapa(mapController);
       },
+      polylines: mapaBloc.state.polylines.values.toSet(),
     );
   }
 }
