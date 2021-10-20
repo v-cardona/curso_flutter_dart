@@ -35,10 +35,11 @@ class _MapaPageState extends State<MapaPage> {
               return crearMapa(state);
             },
           ),
-          Positioned(
+          const Positioned(
             top: 15,
             child: SearchBar(),
           ),
+          MarcadorManual(),
         ],
       ),
       floatingActionButton: Column(
