@@ -44,7 +44,12 @@ class SearchDestination extends SearchDelegate<SearchResult> {
           leading: const Icon(Icons.location_on),
           title: const Text('Colocar ubicacion manualmente'),
           onTap: () {
-            close(context, SearchResult(cancelo: false));
+            close(
+                context,
+                SearchResult(
+                  cancelo: false,
+                  manual: true,
+                ));
           },
         ),
       ],
