@@ -14,10 +14,17 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   // controlador del mapa
   late GoogleMapController _mapController;
   // polylines
+  // ubicacion por donde se mueve el usuario
   Polyline _miRuta = const Polyline(
     polylineId: PolylineId('mi_ruta'),
     width: 4,
     color: Colors.transparent,
+  );
+  // ruta desde posicion del usuario hasta el destino
+  Polyline _miRutaDestino = const Polyline(
+    polylineId: PolylineId('mi_ruta_destino'),
+    width: 4,
+    color: Colors.black87,
   );
 
   MapaBloc() : super(MapaState()) {
@@ -26,6 +33,7 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     on<OnMarcarRecorrido>(_onMarcarRecorrido);
     on<OnSeguirUbicacion>(_onSeguirUbicacion);
     on<OnMovioMapa>(_onMovioMapa);
+    on<OnCrearRutaInicioDestino>(_onCrearRutaInicioDestino);
   }
 
   void initMapa(GoogleMapController controller) {
@@ -102,5 +110,15 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
     emit(state.copyWith(
       ubicacionCentral: event.centroMapa,
     ));
+  }
+
+  void _onCrearRutaInicioDestino(
+      OnCrearRutaInicioDestino event, Emitter<MapaState> emit) {
+    _miRutaDestino = _miRutaDestino.copyWith(pointsParam: event.rutaCoordenas);
+
+    final currentPolylines = state.polylines;
+    currentPolylines['mi_ruta_destino'] = _miRutaDestino;
+
+    emit(state.copyWith(polylines: currentPolylines));
   }
 }
