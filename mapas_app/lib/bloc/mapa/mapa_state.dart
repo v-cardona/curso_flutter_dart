@@ -8,7 +8,7 @@ class MapaState {
   final bool dibujarRecorrido;
   // si quiere el usuario seguir la ubicacion con la camara centrada
   final bool seguirUbicacion;
-
+  // se usa para recuperar la ubicacion final con el marcador manual
   final LatLng ubicacionCentral;
 
   //polylines
