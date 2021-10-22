@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
+import 'package:mapas_app/models/search_response.dart';
 import 'package:mapas_app/models/search_result.dart';
+import 'package:mapas_app/services/traffic_service.dart';
 
 class SearchDestination extends SearchDelegate<SearchResult> {
   @override
   final String searchFieldLabel;
+  final TrafficService _trafficService;
+  final LatLng proximidad;
 
-  SearchDestination() : searchFieldLabel = 'Buscar...';
+  SearchDestination({
+    required this.proximidad,
+  })  : searchFieldLabel = 'Buscar...',
+        _trafficService = TrafficService();
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -33,26 +43,67 @@ class SearchDestination extends SearchDelegate<SearchResult> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text('buildResults');
+    return _construirResultadosSugerencias();
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          leading: const Icon(Icons.location_on),
-          title: const Text('Colocar ubicacion manualmente'),
-          onTap: () {
-            close(
-                context,
-                SearchResult(
-                  cancelo: false,
-                  manual: true,
-                ));
+    if (query.trim().isEmpty) {
+      return ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.location_on),
+            title: const Text('Colocar ubicacion manualmente'),
+            onTap: () {
+              close(
+                  context,
+                  SearchResult(
+                    cancelo: false,
+                    manual: true,
+                  ));
+            },
+          ),
+        ],
+      );
+    } else {
+      return _construirResultadosSugerencias();
+    }
+  }
+
+  Widget _construirResultadosSugerencias() {
+    if (query.trim().isEmpty) return Container();
+
+    _trafficService.getSugerenciasPorQuery(query.trim(), proximidad);
+
+    return StreamBuilder(
+      stream: _trafficService.sugerenciasStream,
+      builder: (context, AsyncSnapshot<SearchResponse> snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final lugares = snapshot.data?.features;
+
+        if (lugares?.isEmpty ?? true) {
+          return ListTile(
+            title: Text('No hay resultados con $query'),
+          );
+        }
+
+        return ListView.separated(
+          separatorBuilder: (context, index) => const Divider(),
+          itemCount: lugares?.length ?? 0,
+          itemBuilder: (context, index) {
+            final lugar = lugares?[index];
+            return ListTile(
+              leading: Icon(Icons.place),
+              title: Text(lugar?.textEs ?? ''),
+              subtitle: Text(lugar?.placeNameEs ?? ''),
+              onTap: () {},
+            );
           },
-        ),
-      ],
+        );
+      },
     );
   }
 }
