@@ -61,12 +61,36 @@ class SearchBar extends StatelessWidget {
     );
   }
 
-  void retornoBusqueda(BuildContext context, SearchResult result) {
+  Future<void> retornoBusqueda(
+      BuildContext context, SearchResult result) async {
     if (result.cancelo) return;
 
     if (result.manual) {
       BlocProvider.of<BusquedaBloc>(context).add(OnActivarMarcadorManual());
       return;
     }
+
+    calcularAlerta(context);
+
+    // calcular ruta en base al valor recibido por autosuggest
+    final trafficService = TrafficService();
+    final mapaBloc = BlocProvider.of<MapaBloc>(context);
+    final inicio = BlocProvider.of<MiUbicacionBloc>(context).state.ubicacion;
+    final destino = result.position;
+    final drivingResponse =
+        await trafficService.getCoordsInicioYFin(inicio, destino);
+
+    final geometry = drivingResponse.routes[0].geometry;
+    final duration = drivingResponse.routes[0].duration;
+    final distance = drivingResponse.routes[0].distance;
+
+    final points = Poly.Polyline.Decode(encodedString: geometry, precision: 6);
+    final List<LatLng> rutaCoordenadas = points.decodedCoords
+        .map((point) => LatLng(point[0], point[1]))
+        .toList();
+
+    mapaBloc.add(OnCrearRutaInicioDestino(rutaCoordenadas, distance, duration));
+
+    Navigator.of(context).pop();
   }
 }

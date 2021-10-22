@@ -99,7 +99,20 @@ class SearchDestination extends SearchDelegate<SearchResult> {
               leading: Icon(Icons.place),
               title: Text(lugar?.textEs ?? ''),
               subtitle: Text(lugar?.placeNameEs ?? ''),
-              onTap: () {},
+              onTap: () {
+                close(
+                    context,
+                    SearchResult(
+                      cancelo: false,
+                      manual: false,
+                      position: LatLng(
+                        lugar?.center[1] ?? 0,
+                        lugar?.center[0] ?? 0,
+                      ),
+                      descripcion: lugar?.placeNameEs ?? '',
+                      nombreDestino: lugar?.textEs ?? '',
+                    ));
+              },
             );
           },
         );
