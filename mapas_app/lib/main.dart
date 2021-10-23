@@ -6,6 +6,7 @@ import 'package:mapas_app/bloc/mi_ubicacion/mi_ubicacion_bloc.dart';
 import 'package:mapas_app/pages/acceso_gps_page.dart';
 import 'package:mapas_app/pages/loading_page.dart';
 import 'package:mapas_app/pages/mapa_page.dart';
+import 'package:mapas_app/pages/test_marker_page.dart';
 
 void main() => runApp(MyApp());
 

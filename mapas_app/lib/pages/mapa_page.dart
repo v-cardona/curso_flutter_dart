@@ -78,6 +78,7 @@ class _MapaPageState extends State<MapaPage> {
             mapaBloc.initMapa(mapController);
           },
           polylines: mapaBloc.state.polylines.values.toSet(),
+          markers: mapaBloc.state.marcadores.values.toSet(),
           onCameraMove: (cameraPosition) {
             LatLng centroMapa = cameraPosition.target;
             mapaBloc.add(OnMovioMapa(centroMapa));

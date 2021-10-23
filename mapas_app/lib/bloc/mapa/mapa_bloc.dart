@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapas_app/helpers/helpers.dart';
 import 'package:mapas_app/themes/uber_map_theme.dart';
 import 'package:meta/meta.dart';
 
@@ -113,12 +114,55 @@ class MapaBloc extends Bloc<MapaEvent, MapaState> {
   }
 
   void _onCrearRutaInicioDestino(
-      OnCrearRutaInicioDestino event, Emitter<MapaState> emit) {
+      OnCrearRutaInicioDestino event, Emitter<MapaState> emit) async {
     _miRutaDestino = _miRutaDestino.copyWith(pointsParam: event.rutaCoordenas);
 
     final currentPolylines = state.polylines;
     currentPolylines['mi_ruta_destino'] = _miRutaDestino;
 
-    emit(state.copyWith(polylines: currentPolylines));
+    // marcadores
+    //icono inicio
+    //final iconInicio = await getAssetImageMarker();
+    final iconInicio = await getMarkerInicioIcon(event.duracion.toInt());
+    final markerInicio = Marker(
+      markerId: const MarkerId('inicio'),
+      position: event.rutaCoordenas[0],
+      icon: iconInicio,
+      anchor: Offset(0.0, 1.0),
+      infoWindow: InfoWindow(
+        title: 'Mi ubicacion',
+        snippet: 'Duracion recorrido: ${(event.duracion / 60).floor()} minutos',
+      ),
+    );
+    //final iconDestino = await getNetworkImageMarker();
+    final iconDestino =
+        await getMarkerDestinoIcon(event.nombreDestino, event.distancia);
+    final double km = (event.distancia / 1000).floor().toDouble();
+    final markerDestino = Marker(
+      markerId: const MarkerId('destino'),
+      position: event.rutaCoordenas[event.rutaCoordenas.length - 1],
+      icon: iconDestino,
+      anchor: Offset(0.0, 1.0),
+      infoWindow: InfoWindow(
+        title: event.nombreDestino,
+        snippet: 'Distancia: $km km',
+      ),
+    );
+    // copia de los marcadores actuales
+    final newMarkers = {...state.marcadores};
+    newMarkers['inicio'] = markerInicio;
+    newMarkers['destino'] = markerDestino;
+
+    // abrir el info window, se realiza un delay porque se necesita que el
+    //marcador alla sido añadido en el mapa y acceder con su controlador,
+    //eso lo hara en la instruccion siguiente al emitir el estado
+    Future.delayed(const Duration(milliseconds: 300)).then((value) {
+      _mapController.showMarkerInfoWindow(const MarkerId('destino'));
+    });
+
+    emit(state.copyWith(
+      polylines: currentPolylines,
+      marcadores: newMarkers,
+    ));
   }
 }

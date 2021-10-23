@@ -87,6 +87,9 @@ class SearchBar extends StatelessWidget {
     final drivingResponse =
         await trafficService.getCoordsInicioYFin(inicio, destino);
 
+    // obtener info del destino
+    final nombreDestino = result.nombreDestino;
+
     final geometry = drivingResponse.routes[0].geometry;
     final duration = drivingResponse.routes[0].duration;
     final distance = drivingResponse.routes[0].distance;
@@ -96,7 +99,8 @@ class SearchBar extends StatelessWidget {
         .map((point) => LatLng(point[0], point[1]))
         .toList();
 
-    mapaBloc.add(OnCrearRutaInicioDestino(rutaCoordenadas, distance, duration));
+    mapaBloc.add(OnCrearRutaInicioDestino(
+        rutaCoordenadas, distance, duration, nombreDestino));
 
     Navigator.of(context).pop();
 

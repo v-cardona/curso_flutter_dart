@@ -13,6 +13,8 @@ class MapaState {
 
   //polylines
   final Map<String, Polyline> polylines;
+  //marcadores
+  final Map<String, Marker> marcadores;
 
   MapaState({
     this.mapaListo = false,
@@ -20,7 +22,9 @@ class MapaState {
     this.seguirUbicacion = false,
     LatLng? ubicacionCentral,
     Map<String, Polyline>? polylines,
+    Map<String, Marker>? marcadores,
   })  : polylines = polylines ?? {},
+        marcadores = marcadores ?? {},
         ubicacionCentral = ubicacionCentral ?? const LatLng(0, 0);
 
   MapaState copyWith({
@@ -29,6 +33,7 @@ class MapaState {
     bool? seguirUbicacion,
     LatLng? ubicacionCentral,
     Map<String, Polyline>? polylines,
+    Map<String, Marker>? marcadores,
   }) =>
       MapaState(
         mapaListo: mapaListo ?? this.mapaListo,
@@ -36,5 +41,6 @@ class MapaState {
         seguirUbicacion: seguirUbicacion ?? this.seguirUbicacion,
         ubicacionCentral: ubicacionCentral ?? this.ubicacionCentral,
         polylines: polylines ?? this.polylines,
+        marcadores: marcadores ?? this.marcadores,
       );
 }
